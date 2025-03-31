@@ -2,7 +2,7 @@ import { generateToken } from "../lib/utils.js";
 import  User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js"
-import mongoose from "mongoose";
+
 
 export const signup = async (req, res) => {
     const {fullName,email,password} = req.body
@@ -86,52 +86,28 @@ export const logout = (req, res) => {
     }
 };
 
-
-
 export const updateProfile = async (req, res) => {
-  try {
-    console.log("Complete User Object from Request:", JSON.stringify(req.user, null, 2));
-
-    if (!req.user || !req.user._id) {
-      return res.status(401).json({ message: "Unauthorized - User not found in request" });
+    try {
+      const { profilePic } = req.body;
+      const userId = req.user._id;
+  
+      if (!profilePic) {
+        return res.status(400).json({ message: "Profile pic is required" });
+      }
+  
+      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { profilePic: uploadResponse.secure_url },
+        { new: true }
+      );
+  
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      console.log("error in update profile:", error);
+      res.status(500).json({ message: "Internal server error123" });
     }
-
-    const token = req.cookies?.jwt || req.headers?.authorization?.split(" ")[1];
-    console.log("Extracted Token:", token);
-
-    if (!mongoose.Types.ObjectId.isValid(req.user._id)) {
-      console.error("Invalid UserID:", req.user._id);
-      return res.status(400).json({ message: "Invalid UserID Format" });
-    }
-
-    console.log("User ID for Query:", req.user._id);
-
-    const user = await User.findById(req.user._id);
-    console.log(user ? "User Found:" : "User Not Found:", user);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const { profilePic } = req.body;
-    console.log("Received Profile Pic:", profilePic);
-
-    if (!profilePic) {
-      return res.status(400).json({ message: "Profile picture is required" });
-    }
-
-    user.profilePic = profilePic;
-    await user.save();
-
-    res.status(200).json({ message: "Profile updated successfully", user });
-  } catch (error) {
-    console.error("Error in updateProfile:", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
 };
-
-  
-  
 
 export const checkMath = (req,res) => {
     try{
