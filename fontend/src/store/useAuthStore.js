@@ -87,6 +87,10 @@ export const useAuthStore = create((set, get) => ({
 
         const socket = io(BASE_URL)
         socket.connect();
+
+        set({ socket });
     },
-    disconnectSocket: () => {},
+    disconnectSocket: () => {
+        if(get().socket?.connected) get().socket.disconnect();
+    },
 }));
