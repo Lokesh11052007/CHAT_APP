@@ -9,4 +9,4 @@ router.get("/:id",  protectRoutes, getMessages)
 
 
 router.post("/send/:id", protectRoutes, sendMessage)
-export default router;
+export default router; 

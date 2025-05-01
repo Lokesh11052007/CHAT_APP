@@ -116,4 +116,4 @@ export const checkMath = (req,res) => {
         console.log("Error in checkMath controller", error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
-}
+} 

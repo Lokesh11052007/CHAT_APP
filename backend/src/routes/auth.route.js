@@ -14,5 +14,5 @@ router.put("/update-profile", protectRoutes, updateProfile)
 
 router.get("/check", protectRoutes, checkMath)
 
-export default router;
+export default router; 
 

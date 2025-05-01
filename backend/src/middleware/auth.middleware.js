@@ -22,7 +22,7 @@ export const protectRoutes = async (req, res, next) => {
     }
 
     req.user = user;
-
+ 
     next();
   } catch (error) {
     console.error("Auth Middleware Error:", error.message);

@@ -98,7 +98,7 @@ const seedUsers = [
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/7.jpg",
   },
-];
+]; 
 
 const seedDatabase = async () => {
   try {
